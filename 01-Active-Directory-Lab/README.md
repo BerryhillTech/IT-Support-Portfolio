@@ -218,3 +218,34 @@ This lab provided hands-on experience administering a Windows domain rather than
 I practiced the workflow an IT support professional may encounter when provisioning a user, assigning role-based permissions, joining a workstation to a domain, configuring access to organizational resources, and troubleshooting a permissions-related incident.
 
 The troubleshooting portion was particularly useful because it required validating multiple layers of the environment—including network connectivity, authentication, Active Directory group membership, SMB permissions, and NTFS permissions—to isolate and resolve the issue.
+
+
+---
+
+## Project Screenshots
+
+The following screenshots provide validation of the completed Active Directory lab environment and key administrative tasks.
+
+### 1. Active Directory Organizational Structure
+
+The Active Directory environment was organized into departmental Organizational Units (OUs) representing a small business structure.
+
+![Active Directory OU Structure](screenshots/01-active-directory-ou-structure.png)
+
+### 2. Security Group and User Membership
+
+The `IT-Staff` security group was configured with the test domain user Jordan Davis as a member, demonstrating group-based access control.
+
+![IT-Staff Group Membership](screenshots/02-it-staff-group-membership.png)
+
+### 3. Domain Authentication and File Share Validation
+
+CLIENT01 was successfully joined to the `berryhill.local` domain. The `jdavis` domain account was authenticated, recognized as a member of `IT-Staff`, and successfully created a test file within the shared network folder.
+
+![Domain and File Share Validation](screenshots/03-domain-share-validation.png)
+
+### 4. DNS and Active Directory Service Discovery
+
+DNS resolution and Active Directory service discovery were validated from CLIENT01. The LDAP SRV record successfully identified `dc01.berryhill.local` as the domain service provider.
+
+![DNS and SRV Validation](screenshots/04-dns-srv-validation.png)
