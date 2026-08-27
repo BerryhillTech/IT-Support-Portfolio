@@ -40,7 +40,7 @@ Each simulated support ticket will include:
 | Ticket | Issue | Category | Status |
 |---|---|---|---|
 | HD-001 | Domain user unable to sign in | Account / Authentication | Resolved |
-| HD-002 | User password issue | Account / Authentication | Planned |
+| HD-002 | Domain account locked after failed sign-in attempts | Account / Authentication | Resolved |
 | HD-003 | User cannot access shared folder | Access / Permissions | Planned |
 | HD-004 | Mapped network drive unavailable | File Services | Planned |
 | HD-005 | User requires departmental resource access | Service Request | Planned |
@@ -92,6 +92,65 @@ This confirmed that Jordan Davis successfully authenticated using the domain acc
 #### Evidence
 
 ![HD-001 Authentication Verification](screenshots/hd-001-authentication-verification.png)
+
+### HD-002 — Domain Account Lockout
+
+**User:** Jordan Davis (`jdavis`)  
+**Workstation:** Client01  
+**Category:** Account / Authentication  
+**Priority:** P3 — Normal  
+**Status:** Resolved
+
+#### Issue Reported
+
+The user reported being unable to sign in to Client01 despite attempting to use the correct password. Windows reported that the account was currently locked out.
+
+#### Troubleshooting Steps
+
+1. Reproduced the sign-in issue on Client01 and observed the Windows account lockout message.
+2. Opened Active Directory Users and Computers (ADUC) on DC01.
+3. Located the `jdavis` domain account and opened the account properties.
+4. Verified that Active Directory reported the account as currently locked out.
+5. Determined that a password reset was unnecessary because the issue was an account lockout rather than an invalid or forgotten password.
+6. Used the **Unlock account** option in ADUC to restore account access.
+7. Returned to Client01 and successfully authenticated using the user's existing credentials.
+8. Ran `whoami` to verify the authenticated domain identity.
+
+#### Root Cause
+
+The domain account reached the configured account lockout threshold after multiple invalid authentication attempts.
+
+#### Resolution
+
+Unlocked the `jdavis` domain account through Active Directory Users and Computers without resetting the user's password.
+
+#### Verification
+
+After the account was unlocked, the user successfully signed in to Client01 using the existing credentials.
+
+The following command was executed:
+
+`whoami`
+
+The command returned:
+
+`berryhill\jdavis`
+
+This confirmed that domain authentication was successfully restored.
+
+#### Evidence
+
+**Client-side lockout message:**
+
+![HD-002 Client Lockout Message](screenshots/hd-002-client-lockout-message.png)
+
+**Active Directory lockout confirmation:**
+
+![HD-002 ADUC Locked Account](screenshots/hd-002-aduc-locked-account.png)
+
+**Successful authentication after account unlock:**
+
+![HD-002 Unlock Verification](screenshots/hd-002-unlock-verification.png)
 
 ## Troubleshooting Methodology
 
