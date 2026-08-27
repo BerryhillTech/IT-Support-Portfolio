@@ -58,7 +58,7 @@ I also created the following security group:
 
 Jordan Davis was added to the `IT-Staff` group so permissions could be assigned using group membership rather than directly to an individual user.
 
-This follows the principle of role-based access control and simplifies permission administration as an organization grows.
+This follows the principle of group-based access control and simplifies permission administration as an organization grows.
 
 ---
 
@@ -197,7 +197,7 @@ A test file named `Jordan-Test.txt` was successfully created in the network shar
 - Organizational Unit Management
 - User Account Administration
 - Security Group Administration
-- Role-Based Access Control
+- Group-Based Access Control
 - Windows 11 Domain Joining
 - DNS Configuration
 - Active Directory DNS/SRV Records
@@ -215,7 +215,7 @@ A test file named `Jordan-Test.txt` was successfully created in the network shar
 
 This lab provided hands-on experience administering a Windows domain rather than working only with theoretical Active Directory concepts.
 
-I practiced the workflow an IT support professional may encounter when provisioning a user, assigning role-based permissions, joining a workstation to a domain, configuring access to organizational resources, and troubleshooting a permissions-related incident.
+I practiced the workflow an IT support professional may encounter when provisioning a user, assigning group-based permissions, joining a workstation to a domain, configuring access to organizational resources, and troubleshooting a permissions-related incident.
 
 The troubleshooting portion was particularly useful because it required validating multiple layers of the environment—including network connectivity, authentication, Active Directory group membership, SMB permissions, and NTFS permissions—to isolate and resolve the issue.
 
