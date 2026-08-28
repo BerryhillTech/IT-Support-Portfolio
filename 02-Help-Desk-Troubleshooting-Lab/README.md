@@ -174,6 +174,10 @@ The user was able to access the shared folder on `\\DC01\IT-Share`, but permissi
 6. Used Advanced Security Settings and Effective Access to verify the user's resulting permissions.
 7. Tested access from Client01 using the Jordan Davis account.
 
+### Root Cause
+
+The shared folder had inconsistent SMB and NTFS permission assignments that did not match the intended role-based access model. Standard domain users required read-only access, while members of the `IT-Staff` security group required modify access.
+
 ### Resolution
 
 Configured group-based permissions so that `Domain Users` receive read-only access while `IT-Staff` receives modify access. Verified that Jordan Davis could open files in the share but could not save changes.
