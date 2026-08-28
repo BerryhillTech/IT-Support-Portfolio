@@ -178,11 +178,11 @@ The following were successfully verified:
 
 - CLIENT01 was joined to `berryhill.local`
 - Jordan Davis could authenticate using the domain account
-- The user was recognized as a member of `IT-Staff`
+- The user was recognized as a standard domain user with read-only access to shared resources
 - CLIENT01 could communicate with DC01
 - DNS successfully located Active Directory services
 - The user could access `\\DC01\IT-Share`
-- The user could create a file within the shared folder
+- The user could open and read files within the shared folder but could not create, modify, or delete files
 - Group-based access control functioned as intended
 
 A test file named `Jordan-Test.txt` was successfully created in the network share from CLIENT01.
