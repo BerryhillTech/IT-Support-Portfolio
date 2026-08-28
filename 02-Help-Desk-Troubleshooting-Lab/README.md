@@ -42,7 +42,7 @@ Each simulated support ticket will include:
 | HD-001 | Domain user unable to sign in | Account / Authentication | Resolved |
 | HD-002 | Domain account locked after failed sign-in attempts | Account / Authentication | Resolved |
 | HD-003 | User cannot access shared folder | Access / Permissions | Resolved |
-| HD-004 | Mapped network drive unavailable | File Services | Planned |
+| HD-004 | Mapped network drive unavailable | File Services | Resolved |
 | HD-005 | User requires departmental resource access | Service Request | Planned |
 | HD-006 | Windows application or user profile issue | Application / Windows | Planned |
 
@@ -191,6 +191,60 @@ Jordan's Effective Access showed read permissions without write, delete, or full
 ![HD-003 Effective Access](screenshots/hd-003-effective-access.png)
 
 ![HD-003 Read-Only Access Denied](screenshots/hd-003-read-only-access-denied.png)
+
+## HD-004 — Mapped Network Drive Unavailable
+
+**User:** Jordan Davis (`jdavis`)  
+**Workstation:** CLIENT01  
+**Category:** File Services  
+**Priority:** P3 — Normal  
+**Status:** Resolved
+
+### Issue
+
+The user reported that the mapped network drive used to access the departmental file share was no longer available in File Explorer.
+
+The expected mapping was:
+
+`Z:` → `\\DC01\IT-Share`
+
+### Troubleshooting Steps
+
+1. Opened File Explorer and confirmed that the `Z:` mapped network drive was not present under This PC.
+2. Ran `net use` and confirmed that no network drive mappings were registered for the user.
+3. Tested connectivity to the domain controller using `ping DC01` and received successful replies.
+4. Accessed `\\DC01\IT-Share` directly using the UNC path and confirmed that the shared folder and its contents were available.
+5. Determined that the file server and SMB share were functioning and isolated the issue to the missing client-side drive mapping.
+6. Recreated the mapping using:
+
+   `net use Z: \\DC01\IT-Share /persistent:yes`
+
+7. Ran `net use` again and confirmed that `Z:` was mapped to `\\DC01\IT-Share` with a status of `OK`.
+8. Signed out and signed back in to verify that the persistent mapping was retained.
+
+### Root Cause
+
+The user's `Z:` drive mapping to `\\DC01\IT-Share` was absent. The underlying network connection and SMB share remained available, confirming that the issue was isolated to the client-side drive mapping rather than a file server or share outage.
+
+### Resolution
+
+Recreated the `Z:` network drive mapping to `\\DC01\IT-Share` using the `net use` command with the `/persistent:yes` option.
+
+### Verification
+
+After recreating the mapping, `net use` displayed the `Z:` drive with a status of `OK`.
+
+The user was able to access the shared folder through the mapped drive. After signing out and signing back in, the `Z:` drive remained available, confirming that the persistent mapping was successfully restored.
+
+### Evidence
+
+![Missing Mapped Drive](screenshots/hd-004-missing-mapped-drive.png)
+
+![UNC Share Access](screenshots/hd-004-unc-share-access.png)
+
+![Mapped Drive Restored](screenshots/hd-004-mapping-restored.png)
+
+![Persistent Drive Verification](screenshots/hd-004-persistent-drive-verification.png)
 
 ## Troubleshooting Methodology
 
