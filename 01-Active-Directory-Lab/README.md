@@ -45,20 +45,25 @@ This structure allows users, computers, and security groups to be organized base
 
 ## User and Group Administration
 
-Created a test employee account:
+Created test employee accounts to validate different permission levels within the domain.
 
 **User:** Jordan Davis  
 **Username:** `jdavis`
 
-The account was placed in the IT organizational unit.
+Jordan Davis was configured as a standard domain user and placed in the IT organizational unit. The account was used to represent a typical employee requiring read-only access to departmental resources.
+
+**User:** Alex Johnson  
+**Username:** `ajohnson`
+
+Alex Johnson was used to represent an IT employee requiring elevated access to departmental resources.
 
 I also created the following security group:
 
 **Security Group:** `IT-Staff`
 
-Jordan Davis was configured as a standard domain user to represent a typical employee account. Access to shared resources was later restricted using group-based permissions, with standard Domain Users receiving read-only access.
+Alex Johnson was added to the `IT-Staff` security group, while Jordan Davis remained a standard domain user.
 
-This follows the principle of group-based access control and simplifies permission administration as an organization grows.
+This configuration allowed access to resources to be controlled through security group membership rather than assigning permissions directly to individual users, demonstrating group-based access control.
 
 ---
 
@@ -72,9 +77,7 @@ The workstation was joined to:
 
 `berryhill.local`
 
-After joining the domain, I verified domain authentication by signing into CLIENT01 using the domain account:
-
-`BERRYHILL\jdavis`
+After joining the domain, I verified domain authentication by signing into CLIENT01 using domain accounts.
 
 PowerShell was used to verify the workstation's domain membership and authenticated user context.
 
@@ -116,11 +119,18 @@ The folder was published as an SMB network share:
 
 `\\DC01\IT-Share`
 
-Access was assigned to the `IT-Staff` security group rather than directly to Jordan Davis.
+Access was configured using group-based permissions rather than assigning permissions directly to individual users.
 
-Share permissions were configured to allow the group to modify content.
+The final access model was:
 
-NTFS permissions were also configured for `IT-Staff`.
+- `Domain Users` — Read-only access
+- `IT-Staff` — Modify access
+- `Administrators` — Full Control
+- `SYSTEM` — Full Control
+
+Both SMB share permissions and NTFS permissions were reviewed to ensure the effective permissions matched the intended access model.
+
+Jordan Davis was used to validate standard read-only access, while Alex Johnson was used to validate the additional permissions granted through membership in the `IT-Staff` security group.
 
 This demonstrated the interaction between:
 
@@ -128,16 +138,13 @@ This demonstrated the interaction between:
 - SMB share permissions
 - NTFS file system permissions
 - Domain authentication
+- Effective permissions
 
 ---
 
 ## Troubleshooting Scenario
 
-During testing, the domain user initially received:
-
-> Windows cannot access \\DC01\IT-Share
-
-The workstation could successfully communicate with DC01 over TCP port 445, confirming that basic SMB network connectivity was functioning.
+During testing, access to the shared resource did not initially behave as intended.
 
 Troubleshooting included:
 
@@ -148,6 +155,7 @@ Troubleshooting included:
 - Verifying Active Directory group membership
 - Refreshing Group Policy
 - Checking the user's authentication token
+- Reviewing Effective Access
 - Testing access from CLIENT01
 
 Commands used during troubleshooting included:
@@ -164,28 +172,32 @@ Commands used during troubleshooting included:
 
 `Get-SmbShareAccess -Name "IT-Share"`
 
-The issue was resolved by validating and correcting group membership and permissions.
+The permissions were corrected so that standard domain users received read-only access while members of `IT-Staff` received modify access.
+
+Client-side testing and Effective Access verification were then used to confirm that the permissions functioned as intended.
 
 ---
 
 ## Final Validation
 
-The completed configuration was tested from CLIENT01 while authenticated as:
-
-`BERRYHILL\jdavis`
+The completed configuration was tested from CLIENT01 using domain user accounts with different permission levels.
 
 The following were successfully verified:
 
 - CLIENT01 was joined to `berryhill.local`
-- Jordan Davis could authenticate using the domain account
-- The user was recognized as a standard domain user with read-only access to shared resources
+- Domain users could authenticate successfully
 - CLIENT01 could communicate with DC01
 - DNS successfully located Active Directory services
-- The user could access `\\DC01\IT-Share`
-- The user could open and read files within the shared folder but could not create, modify, or delete files
+- Domain users could access `\\DC01\IT-Share`
+- Jordan Davis had read-only access to the shared resource
+- Jordan Davis could open files but could not save changes to protected files
+- Alex Johnson was recognized as a member of `IT-Staff`
+- Alex Johnson could modify content within the shared resource
 - Group-based access control functioned as intended
 
-A test file named `Jordan-Test.txt` was successfully created in the network share from CLIENT01.
+Effective Access testing confirmed that Jordan Davis had read permissions without write, delete, or full-control permissions. A client-side test also confirmed that Windows denied a save attempt while authenticated as Jordan Davis.
+
+Testing with Alex Johnson confirmed that membership in the `IT-Staff` security group provided the intended modify access.
 
 ---
 
@@ -203,10 +215,12 @@ A test file named `Jordan-Test.txt` was successfully created in the network shar
 - Active Directory DNS/SRV Records
 - SMB File Sharing
 - NTFS Permissions
+- Effective Access Analysis
 - PowerShell
 - TCP/IP Troubleshooting
 - Group Policy Refresh
 - Authentication Troubleshooting
+- Permissions Troubleshooting
 - Technical Documentation
 
 ---
@@ -215,10 +229,11 @@ A test file named `Jordan-Test.txt` was successfully created in the network shar
 
 This lab provided hands-on experience administering a Windows domain rather than working only with theoretical Active Directory concepts.
 
-I practiced the workflow an IT support professional may encounter when provisioning a user, assigning group-based permissions, joining a workstation to a domain, configuring access to organizational resources, and troubleshooting a permissions-related incident.
+I practiced workflows an IT support professional may encounter when provisioning users, assigning group-based permissions, joining a workstation to a domain, configuring access to organizational resources, and troubleshooting authentication and permissions-related incidents.
 
-The troubleshooting portion was particularly useful because it required validating multiple layers of the environment—including network connectivity, authentication, Active Directory group membership, SMB permissions, and NTFS permissions—to isolate and resolve the issue.
+The troubleshooting portion was particularly useful because it required validating multiple layers of the environment—including network connectivity, authentication, Active Directory group membership, SMB permissions, NTFS permissions, and Effective Access—to isolate and resolve issues.
 
+The final configuration also demonstrated how security groups can be used to provide different levels of access based on a user's role rather than assigning permissions individually.
 
 ---
 
@@ -234,13 +249,13 @@ The Active Directory environment was organized into departmental Organizational 
 
 ### 2. Security Group and User Membership
 
-The `IT-Staff` security group was configured with the test domain user Jordan Davis as a member, demonstrating group-based access control.
+The `IT-Staff` security group was configured to provide elevated departmental access through group membership, demonstrating role-based administration of resource permissions.
 
 ![IT-Staff Group Membership](screenshots/02-it-staff-group-membership.png)
 
 ### 3. Domain Authentication and File Share Validation
 
-CLIENT01 was successfully joined to the `berryhill.local` domain. The `jdavis` domain account was authenticated, recognized as a member of `IT-Staff`, and successfully created a test file within the shared network folder.
+CLIENT01 was successfully joined to the `berryhill.local` domain, and domain authentication and access to the shared network resource were successfully validated.
 
 ![Domain and File Share Validation](screenshots/03-domain-share-validation.png)
 
