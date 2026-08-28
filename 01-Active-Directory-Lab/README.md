@@ -56,7 +56,7 @@ I also created the following security group:
 
 **Security Group:** `IT-Staff`
 
-Jordan Davis was added to the `IT-Staff` group so permissions could be assigned using group membership rather than directly to an individual user.
+Jordan Davis was configured as a standard domain user to represent a typical employee account. Access to shared resources was later restricted using group-based permissions, with standard Domain Users receiving read-only access.
 
 This follows the principle of group-based access control and simplifies permission administration as an organization grows.
 
