@@ -41,7 +41,7 @@ Each simulated support ticket will include:
 |---|---|---|---|
 | HD-001 | Domain user unable to sign in | Account / Authentication | Resolved |
 | HD-002 | Domain account locked after failed sign-in attempts | Account / Authentication | Resolved |
-| HD-003 | User cannot access shared folder | Access / Permissions | Planned |
+| HD-003 | User cannot access shared folder | Access / Permissions | Resolved |
 | HD-004 | Mapped network drive unavailable | File Services | Planned |
 | HD-005 | User requires departmental resource access | Service Request | Planned |
 | HD-006 | Windows application or user profile issue | Application / Windows | Planned |
@@ -151,6 +151,42 @@ This confirmed that domain authentication was successfully restored.
 **Successful authentication after account unlock:**
 
 ![HD-002 Unlock Verification](screenshots/hd-002-unlock-verification.png)
+
+## HD-003 — User Cannot Access Shared Folder
+
+**User:** Jordan Davis (`jdavis`)  
+**Workstation:** Client01  
+**Category:** Access / Permissions  
+**Priority:** P3 — Normal  
+**Status:** Resolved  
+
+### Issue Reported
+
+The user was able to access the shared folder on `\\DC01\IT-Share`, but permissions were not behaving as intended. The user should have read-only access while members of the IT-Staff group should have modify access.
+
+### Troubleshooting Steps
+
+1. Verified the user's current group memberships with `whoami /groups`.
+2. Reviewed NTFS permissions on `C:\IT-Share`.
+3. Reviewed SMB share permissions for `IT-Share`.
+4. Added `Domain Users` with read-only access.
+5. Confirmed `IT-Staff` retained modify access.
+6. Used Advanced Security Settings and Effective Access to verify the user's resulting permissions.
+7. Tested access from Client01 using the Jordan Davis account.
+
+### Resolution
+
+Configured group-based permissions so that `Domain Users` receive read-only access while `IT-Staff` receives modify access. Verified that Jordan Davis could open files in the share but could not save changes.
+
+### Verification
+
+Jordan's Effective Access showed read permissions without write, delete, or full-control permissions. A client-side test confirmed that Windows denied write access when the user attempted to save changes.
+
+### Evidence
+
+![HD-003 Effective Access](screenshots/hd-003-effective-access.png)
+
+![HD-003 Read-Only Access Denied](screenshots/hd-003-read-only-access-denied.png)
 
 ## Troubleshooting Methodology
 
