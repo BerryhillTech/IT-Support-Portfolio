@@ -43,7 +43,7 @@ Building a virtualized Windows enterprise environment using Windows Server and W
 ---
 
 ### 2. Help Desk Troubleshooting Lab
-**Status:** In Progress
+**Status:** Completed
 
 Simulated IT support incidents involving user accounts, Windows workstations, applications, permissions, and common end-user issues.
 
