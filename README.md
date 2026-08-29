@@ -47,6 +47,8 @@ Building a virtualized Windows enterprise environment using Windows Server and W
 
 Simulated IT support incidents involving user accounts, Windows workstations, applications, permissions, and common end-user issues.
 
+📁 [View Project](./02-Help-Desk-Troubleshooting-Lab/)
+
 ---
 
 ### 3. Network Troubleshooting Lab
