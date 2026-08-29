@@ -44,7 +44,7 @@ Each simulated support ticket will include:
 | HD-003 | User cannot access shared folder | Access / Permissions | Resolved |
 | HD-004 | Mapped network drive unavailable | File Services | Resolved |
 | HD-005 | User requires departmental resource access | Service Request | Resolved |
-| HD-006 | Windows application or user profile issue | Application / Windows | Planned |
+| HD-006 | Windows application or user profile issue | Application / Windows | Resolved |
 
 ### HD-001 — Domain User Unable to Sign In
 
@@ -327,6 +327,62 @@ The following were successfully verified:
 ![Group Membership Verification](screenshots/hd-005-group-membership-verification.png)
 
 ![Modify Access Verified](screenshots/hd-005-modify-access-verified.png)
+
+## HD-006 — Windows Application / User Profile Issue
+
+**User:** Jordan Davis (`jdavis`)  
+**Workstation:** CLIENT01  
+**Category:** Application / Windows  
+**Priority:** P3 — Normal  
+**Status:** Resolved
+
+### Issue
+
+The user reported that Notepad was retaining an unwanted application configuration within their Windows profile.
+
+The objective was to determine whether the behavior was caused by the Notepad installation on CLIENT01 or by user-specific application settings.
+
+### Troubleshooting Steps
+
+1. Signed into CLIENT01 as Jordan Davis and reproduced the Notepad configuration issue.
+2. Confirmed that the configuration persisted when Notepad was closed and reopened.
+3. Signed Jordan out of CLIENT01.
+4. Signed into the same workstation as a second domain user, Alex Johnson.
+5. Opened Notepad under Alex's profile and observed that the application used a different, normal configuration.
+6. Determined that the issue did not affect all users on CLIENT01 and was therefore isolated to Jordan's user-specific application configuration.
+7. Returned to Jordan's account and opened Windows Settings.
+8. Navigated to the advanced options for Notepad and reset the application.
+9. Relaunched Notepad and verified that the user-specific configuration had returned to its expected default state.
+
+### Root Cause
+
+The issue was isolated to user-specific Notepad application data within Jordan Davis's Windows profile.
+
+Because Notepad behaved normally when launched by another domain user on the same workstation, the underlying application installation and workstation were determined to be functioning correctly.
+
+### Resolution
+
+Reset Notepad through Windows application settings for the affected user.
+
+This cleared the user-specific application configuration without requiring a system-wide application reinstall or changes to another user's profile.
+
+### Verification
+
+After the reset, Notepad launched successfully under Jordan Davis's account with the expected default configuration.
+
+A post-resolution test confirmed that the application was functioning normally.
+
+Testing with Alex Johnson also demonstrated that the original behavior was isolated to Jordan's user-specific application configuration rather than CLIENT01 as a whole.
+
+### Evidence
+
+![Jordan User-Specific Configuration](screenshots/hd-006-jordan-user-specific-config.png)
+
+![Alternate User Test](screenshots/hd-006-alternate-user-test.png)
+
+![Notepad Reset Options](screenshots/hd-006-notepad-reset-options.png)
+
+![Profile Reset Verification](screenshots/hd-006-profile-reset-verified.png)
 
 ## Troubleshooting Methodology
 
