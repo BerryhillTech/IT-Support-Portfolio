@@ -1,6 +1,6 @@
 # IT Support & Systems Administration Portfolio
 
-Welcome to my IT Support Portfolio.
+Hi! Welcome to my IT Support Portfolio.
 
 This repository documents hands-on projects I have completed to develop practical skills in IT support, Windows administration, Active Directory, networking, troubleshooting, PowerShell, and Microsoft endpoint management.
 
