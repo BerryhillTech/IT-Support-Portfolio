@@ -92,10 +92,12 @@ protection as it grows past a single trial tenant.
    state, scope, and grant control matched the intended configuration.
 
 ### Evidence
-- `screenshots/conditional-access-policy-form.png` — completed policy
-  creation form before saving
-- `screenshots/conditional-access-policy-details.png` — Policy details
-  pane confirming State: On, 1 group scoped, MFA required
+
+![Completed Conditional Access policy creation form](screenshots/conditional-access-policy-form.png)
+*Completed policy creation form before saving — IT-Support group scoped, MFA grant control, policy enabled*
+
+![Policy details confirming the deployed configuration](screenshots/conditional-access-policy-details.png)
+*Policy details pane confirming State: On, 1 group scoped, MFA required*
 
 ### Verification
 Policy details pane confirms: State On (recommended), 1 group included,
