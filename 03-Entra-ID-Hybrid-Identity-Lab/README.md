@@ -69,9 +69,38 @@ Jordan Davis was intentionally left out of this group to demonstrate that standa
 
 ![IT-Support Group Membership](screenshots/03-it-support-group-membership.png)
 
-## Multi-Factor Authentication & Conditional Access
+## Multifactor Authentication & Conditional Access
 
-*Status: In progress — to be documented after configuration.*
+**Status:** Completed
+
+### Objective
+Move beyond baseline Security Defaults to a scoped, group-based Conditional
+Access policy — enforcing MFA specifically for the IT-Support group rather
+than tenant-wide, mirroring how a real organization layers identity
+protection as it grows past a single trial tenant.
+
+### Steps
+1. Disabled Security Defaults (Entra ID → Properties → Manage security
+   defaults), since Security Defaults and Conditional Access policies
+   cannot both govern sign-in enforcement at the same time.
+2. Created a new Conditional Access policy, **IT-Support - Require MFA**:
+   - **Users/groups:** IT-Support (1 group)
+   - **Target resources:** All cloud apps
+   - **Grant control:** Require multifactor authentication
+   - **Enable policy:** On
+3. Verified the policy in the Conditional Access policy list, confirming
+   state, scope, and grant control matched the intended configuration.
+
+### Evidence
+- `screenshots/conditional-access-policy-form.png` — completed policy
+  creation form before saving
+- `screenshots/conditional-access-policy-details.png` — Policy details
+  pane confirming State: On, 1 group scoped, MFA required
+
+### Verification
+Policy details pane confirms: State On (recommended), 1 group included,
+0 users/groups/roles excluded, All resources targeted, Require
+multifactor authentication as the grant control.
 
 ## Sign-In Troubleshooting Scenario
 
