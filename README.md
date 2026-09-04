@@ -2,7 +2,7 @@
 
 Hi! Welcome to my IT Support Portfolio.
 
-This repository documents hands-on projects I have completed to develop practical skills in IT support, Windows administration, Active Directory, networking, troubleshooting, PowerShell, and Microsoft endpoint management.
+This repository documents hands-on projects I have completed to develop practical skills in IT support, Windows administration, Active Directory, Microsoft Entra ID, networking, troubleshooting, PowerShell, and Microsoft endpoint management.
 
 Each project includes documentation of the environment, implementation process, troubleshooting scenarios, and technical solutions used.
 
@@ -11,7 +11,7 @@ Each project includes documentation of the environment, implementation process, 
 - Windows 10/11 Administration
 - Windows Server
 - Active Directory Domain Services
-- Microsoft 365
+- Microsoft Entra ID & Microsoft 365
 - TCP/IP, DNS & DHCP
 - Hardware & Software Troubleshooting
 - PowerShell
@@ -45,43 +45,68 @@ Building a virtualized Windows enterprise environment using Windows Server and W
 ### 2. Help Desk Troubleshooting Lab
 **Status:** Completed
 
-Simulated IT support incidents involving user accounts, Windows workstations, applications, permissions, and common end-user issues.
+Simulated IT support incidents involving user accounts, Windows workstations, applications, permissions, and common end-user issues, documented as six resolved help desk tickets.
+
+**Skills:**
+- Structured Troubleshooting Methodology
+- Active Directory Account Support
+- Access & Permissions Troubleshooting
+- Service Request Fulfillment
+- Root Cause Analysis
+- Help Desk Ticket Documentation
 
 📁 [View Project](./02-Help-Desk-Troubleshooting-Lab/)
 
 ---
 
-### 3. Network Troubleshooting Lab
+### 3. Entra ID & Hybrid Identity Lab
+**Status:** In Progress
+
+Extending the Berryhill Technologies environment into Microsoft Entra ID — cloud identity provisioning, role-based access through security groups, and Conditional Access-based MFA enforcement, with hybrid identity sync to the on-premises Active Directory domain still to come.
+
+**Skills:**
+- Cloud Identity Provisioning
+- Role-Based Access Control (Security Groups)
+- Conditional Access & Multifactor Authentication
+- Microsoft 365 Admin Center
+
+**Remaining:** Sign-in troubleshooting scenario, hybrid identity sync via Azure AD Connect
+
+📁 [View Project](./03-Entra-ID-Hybrid-Identity-Lab/)
+
+---
+
+### 4. Network Troubleshooting Lab
 **Status:** Planned
 
 Hands-on troubleshooting of TCP/IP, DNS, DHCP, and network connectivity using Windows networking tools.
 
 ---
 
-### 4. Windows Endpoint Support Lab
+### 5. Windows Endpoint Support Lab
 **Status:** Planned
 
 Windows administration and troubleshooting using Event Viewer, Device Manager, Windows Services, Task Manager, and other administrative tools.
 
 ---
 
-### 5. PowerShell for IT Support
+### 6. PowerShell for IT Support
 **Status:** Planned
 
 Using PowerShell to perform common IT support and Windows administration tasks.
 
 ---
 
-### 6. Microsoft Entra ID & Intune Lab
+### 7. Intune & Endpoint Management Lab
 **Status:** Planned
 
-Cloud-based identity and endpoint management using Microsoft Entra ID and Microsoft Intune.
+Cloud-based endpoint management using Microsoft Intune — device enrollment, compliance policies, and configuration profiles — building on the identity foundation from the Entra ID & Hybrid Identity Lab.
 
 ---
 
 ## 🔧 Tools & Technologies
 
-`Windows 11` `Windows Server` `Active Directory` `Microsoft 365` `PowerShell` `TCP/IP` `DNS` `DHCP` `Group Policy` `Microsoft Intune` `Microsoft Entra ID`
+`Windows 11` `Windows Server` `Active Directory` `Microsoft Entra ID` `Microsoft 365` `PowerShell` `TCP/IP` `DNS` `DHCP` `Group Policy` `Microsoft Intune` `VMware Workstation`
 
 ## 📚 Certifications
 
