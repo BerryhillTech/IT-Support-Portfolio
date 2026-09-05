@@ -187,9 +187,193 @@ This scenario demonstrates an end-to-end cloud identity support workflow:
 
 **User-reported sign-in failure → Sign-in log investigation → Error code analysis → Password remediation → MFA enforcement → Successful authentication verification**
 
-## Hybrid Identity Sync — Azure AD Connect
+## Hybrid Identity with Microsoft Entra Connect Sync
 
-*Status: Pending — will synchronize berryhill.local with this Entra ID tenant.*
+### Objective
+
+Extend the on-premises `berryhill.local` Active Directory environment into Microsoft Entra ID by configuring Microsoft Entra Connect Sync and Password Hash Synchronization.
+
+The goal was to create a hybrid identity environment in which existing Active Directory users could be synchronized with their corresponding Microsoft Entra ID accounts while maintaining centralized authentication and cloud security controls.
+
+---
+
+### On-Premises Active Directory Preparation
+
+The existing Berryhill Technologies Active Directory environment was hosted on `DC01` using the `berryhill.local` domain.
+
+To prepare selected users for hybrid synchronization:
+
+- Reviewed existing Active Directory users and organizational units.
+- Added an alternative UPN suffix to the Active Directory forest.
+- Updated the UPNs for Alex Johnson and Jordan Davis to align with their existing Microsoft Entra ID usernames.
+- Preserved their legacy `BERRYHILL\username` logon names.
+- Limited synchronization scope to the designated IT organizational unit.
+
+This allowed the hybrid deployment to be tested against a controlled subset of the Active Directory environment rather than synchronizing the entire domain.
+
+![UPN Alignment](screenshots/12-hybrid-upn-alignment-alex.png)
+
+---
+
+### Microsoft Entra Connect Configuration
+
+Microsoft Entra Connect Sync was installed and configured on `DC01`.
+
+Configuration included:
+
+- Custom Microsoft Entra Connect installation
+- Connection to the `berryhill.local` Active Directory forest
+- Connection to the Microsoft Entra ID tenant
+- Password Hash Synchronization (PHS)
+- `userPrincipalName` as the user sign-in attribute
+- `mS-DS-ConsistencyGuid` as the source anchor
+- OU-based synchronization filtering
+- Initial staging-mode deployment for validation before production export
+
+Only the required synchronization functionality was enabled. Features such as federation, Pass-through Authentication, device writeback, and other optional writeback capabilities were intentionally excluded from the lab.
+
+![Entra Connect Configuration](screenshots/13-entra-connect-custom-configuration.png)
+
+![Directory Connection](screenshots/14-on-prem-ad-directory-connected.png)
+
+![OU Filtering](screenshots/15-ou-filtering-it-pilot.png)
+
+---
+
+### Staging and Synchronization Validation
+
+Microsoft Entra Connect was initially configured in staging mode.
+
+This allowed synchronization processing to be validated before changes were exported to Microsoft Entra ID.
+
+Using Synchronization Service Manager, full imports and synchronization cycles were performed against the Active Directory and Microsoft Entra connectors.
+
+The metaverse was then inspected to verify identity correlation.
+
+Alex Johnson and Jordan Davis were successfully represented as single metaverse objects connected to both:
+
+- On-premises Active Directory (`berryhill.local`)
+- Microsoft Entra ID
+
+This demonstrated that the corresponding on-premises and cloud identities were successfully joined rather than creating duplicate identities.
+
+![Hybrid Metaverse Connectors](screenshots/17-hybrid-metaverse-connectors.png)
+
+---
+
+### Production Synchronization
+
+After validating the metaverse joins, staging mode was disabled.
+
+Microsoft Entra Connect then performed the synchronization and export process.
+
+Synchronization Service Manager showed successful operations for:
+
+- Active Directory import
+- Microsoft Entra ID import
+- Full synchronization
+- Microsoft Entra ID export
+
+The Microsoft Entra connector successfully exported the synchronized identity changes without synchronization errors.
+
+![Synchronization Export Success](screenshots/18-entra-sync-export-success.png)
+
+---
+
+### Password Hash Synchronization Test
+
+Password Hash Synchronization was tested by changing the user's password in the on-premises Active Directory environment and then authenticating to Microsoft cloud services using the synchronized credentials.
+
+Alex Johnson successfully authenticated to Microsoft 365 using the updated on-premises password.
+
+The sign-in was also subject to the previously configured Microsoft Entra Conditional Access MFA requirement.
+
+Microsoft Entra sign-in logs confirmed:
+
+- Authentication status: **Success**
+- Authentication requirement: **Multifactor authentication**
+- Application: **One Outlook Web**
+- MFA requirement successfully satisfied
+
+This validated the authentication path from the on-premises Active Directory environment into Microsoft Entra ID while retaining cloud-based MFA enforcement.
+
+![Password Hash and MFA Verification](screenshots/19-password-hash-mfa-verification.png)
+
+---
+
+## Sign-In Troubleshooting Scenario
+
+### Scenario
+
+A simulated sign-in incident was performed using the Alex Johnson account to practice Microsoft Entra ID authentication troubleshooting.
+
+### Initial User Error
+
+An intentionally incorrect password was entered during an interactive Microsoft 365 sign-in.
+
+The user received an incorrect account or password message.
+
+### Investigation
+
+Microsoft Entra sign-in logs were reviewed to determine the cause of the authentication failure.
+
+The failed event reported:
+
+- Sign-in error code: `50126`
+- Failure reason: invalid username or password
+- Application: One Outlook Web
+
+This indicated that authentication failed during primary credential validation rather than because of the Conditional Access or MFA policy.
+
+### Remediation
+
+The user's password was reset by the administrator.
+
+The user then:
+
+1. Authenticated using the temporary credentials.
+2. Changed the temporary password.
+3. Registered Microsoft Authenticator.
+4. Completed the MFA registration process.
+5. Successfully authenticated to Microsoft 365.
+
+### Verification
+
+Microsoft Entra sign-in logs subsequently showed a successful authentication event requiring multifactor authentication.
+
+The event reported:
+
+- Authentication requirement: **Multifactor authentication**
+- Status: **Success**
+- Additional details: **MFA requirement satisfied by claim in the token**
+
+This confirmed successful authentication after remediation and successful enforcement of the MFA requirement.
+
+---
+
+## Skills Demonstrated
+
+- Microsoft Entra ID administration
+- Microsoft Entra Connect Sync
+- Hybrid identity administration
+- Active Directory Domain Services
+- User Principal Name (UPN) configuration
+- Identity synchronization
+- Password Hash Synchronization (PHS)
+- Synchronization Service Manager
+- Metaverse identity correlation
+- OU-based synchronization filtering
+- Staging-mode synchronization validation
+- Microsoft Entra security groups
+- Role-based access concepts
+- Conditional Access
+- Multifactor authentication (MFA)
+- Microsoft Authenticator
+- Microsoft Entra sign-in log analysis
+- Authentication error code analysis
+- Password reset and account remediation
+- Post-remediation authentication verification
+- Hybrid identity troubleshooting
 
 ## Tools and Technologies
 
