@@ -373,7 +373,7 @@ After configuring the directory connection, authentication method, identity sett
 
 ### Evidence
 
-![Microsoft Entra Connect configuration](screenshots/16-entra-connect-configuration.png)
+![Microsoft Entra Connect configuration](screenshots/16-entra-connect-configuration-complete-staging.png)
 
 *Microsoft Entra Connect configuration prepared for the hybrid synchronization process.*
 
@@ -387,7 +387,7 @@ The connector and metaverse views provided visibility into the relationship betw
 
 ### Evidence
 
-![Hybrid metaverse connector verification](screenshots/17-hybrid-metaverse-connector.png)
+![Hybrid metaverse connector verification](screenshots/17-hybrid-metaverse-connectors.png)
 
 *Hybrid identity objects reviewed through the Microsoft Entra Connect synchronization engine.*
 
