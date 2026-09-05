@@ -60,17 +60,42 @@ Simulated IT support incidents involving user accounts, Windows workstations, ap
 ---
 
 ### 3. Entra ID & Hybrid Identity Lab
-**Status:** In Progress
 
-Extending the Berryhill Technologies environment into Microsoft Entra ID — cloud identity provisioning, role-based access through security groups, and Conditional Access-based MFA enforcement, with hybrid identity sync to the on-premises Active Directory domain still to come.
+**Status:** Completed ✅
+
+Built a Microsoft Entra ID and hybrid identity environment extending the existing Berryhill Technologies Active Directory lab into the cloud. The project covers cloud identity administration, role-based access, Conditional Access, MFA, authentication troubleshooting, and synchronization between on-premises Active Directory and Microsoft Entra ID.
 
 **Skills:**
-- Cloud Identity Provisioning
-- Role-Based Access Control (Security Groups)
-- Conditional Access & Multifactor Authentication
-- Microsoft 365 Admin Center
 
-**Remaining:** Sign-in troubleshooting scenario, hybrid identity sync via Azure AD Connect
+- Microsoft Entra ID Administration
+- Cloud User Provisioning & Identity Management
+- Role-Based Access Control (Security Groups)
+- Conditional Access Policy Configuration
+- Multifactor Authentication (MFA)
+- Entra ID Sign-In Log Analysis
+- Authentication & Credential Troubleshooting
+- Administrative Password Reset & Account Recovery
+- Microsoft Entra Connect Sync
+- Hybrid Active Directory / Entra ID Identity Management
+- Organizational Unit (OU) Sync Filtering
+- Password Hash Synchronization (PHS)
+- Synchronization Engine & Metaverse Verification
+- Microsoft 365 Identity Administration
+
+**Key Implementations:**
+
+- Provisioned cloud identities for standard and IT support users
+- Created an IT-Support security group for role-based access
+- Implemented a group-scoped Conditional Access policy requiring MFA
+- Diagnosed a failed Microsoft 365 sign-in using Entra ID sign-in logs and error code `50126`
+- Remediated the authentication issue through an administrative password reset
+- Configured Microsoft Authenticator registration and verified successful MFA authentication
+- Aligned on-premises Active Directory identities with their corresponding Entra ID accounts
+- Configured Microsoft Entra Connect with Password Hash Synchronization
+- Limited synchronization scope to a pilot Organizational Unit
+- Verified identity processing through the Entra Connect synchronization engine and metaverse
+- Successfully exported synchronized identities to Microsoft Entra ID
+- Verified hybrid authentication using synchronized on-premises credentials
 
 📁 [View Project](./03-Entra-ID-Hybrid-Identity-Lab/)
 
