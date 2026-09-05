@@ -106,7 +106,86 @@ multifactor authentication as the grant control.
 
 ## Sign-In Troubleshooting Scenario
 
-*Status: Pending.*
+**Status:** Completed
+
+### Scenario
+
+Alex Johnson reported being unable to sign in to his Microsoft 365 account. A failed sign-in was intentionally generated to simulate a common Tier 1/2 identity support incident and demonstrate troubleshooting through Microsoft Entra ID.
+
+### Initial User Error
+
+Alex attempted to authenticate to Microsoft 365 but received the following message:
+
+> **"Your account or password is incorrect."**
+
+![Alex Johnson failed sign-in due to invalid credentials](screenshots/07-sign-in-failure-invalid-credentials.png)
+
+*User-facing authentication failure reproduced in an Incognito browser session.*
+
+### Investigation — Entra ID Sign-In Logs
+
+Rather than assuming the cause based solely on the user-facing error, the failed authentication attempt was investigated through:
+
+**Microsoft Entra ID → Monitoring & health → Sign-in logs**
+
+The failed interactive sign-in event for Alex Johnson was located and reviewed.
+
+The event revealed:
+
+- **Status:** Failure
+- **Sign-in error code:** `50126`
+- **Failure reason:** Error validating credentials due to invalid username or password
+- **User:** Alex Johnson
+- **Application:** One Outlook Web
+
+Error `50126` confirmed that the authentication failure occurred because the supplied credentials were invalid.
+
+![Entra ID sign-in log showing error 50126](screenshots/08-sign-in-error-50126-diagnosis.png)
+
+*Entra ID sign-in telemetry identifying error 50126 and confirming invalid credentials as the root cause.*
+
+### Remediation — Administrative Password Reset
+
+After identifying the credential failure, an administrative password reset was performed for Alex Johnson through Microsoft Entra ID.
+
+A temporary password was generated for the account so the user could regain access and establish a new password during the next authentication attempt.
+
+![Administrative password reset for Alex Johnson](screenshots/09-password-reset-remediation.png)
+
+*Password reset successfully completed. Temporary credential redacted from portfolio evidence.*
+
+### MFA Enforcement
+
+After the password issue was remediated and Alex successfully passed primary authentication, Microsoft Entra ID required registration of Microsoft Authenticator.
+
+Alex is a member of the **IT-Support** security group, which is targeted by the previously configured **IT-Support - Require MFA** Conditional Access policy.
+
+![Microsoft Authenticator registration prompt](screenshots/10-mfa-registration-prompt.png)
+
+*Microsoft Authenticator registration triggered after successful primary authentication.*
+
+### Verification
+
+Following remediation and MFA configuration, the subsequent Entra ID sign-in event was reviewed to verify successful authentication.
+
+The event confirmed:
+
+- **User:** Alex Johnson
+- **Authentication requirement:** Multifactor authentication
+- **Status:** Success
+- **Additional details:** MFA requirement satisfied by claim in the token
+
+![Successful Entra ID sign-in with MFA](screenshots/11-successful-sign-in-mfa-verification.png)
+
+*Successful authentication verified through Entra ID sign-in logs with the MFA requirement satisfied.*
+
+### Resolution
+
+The incident was resolved by using Entra ID sign-in telemetry to identify invalid credentials, performing an administrative password reset, and verifying that the user could successfully authenticate while satisfying the organization's MFA requirement.
+
+This scenario demonstrates an end-to-end cloud identity support workflow:
+
+**User-reported sign-in failure → Sign-in log investigation → Error code analysis → Password remediation → MFA enforcement → Successful authentication verification**
 
 ## Hybrid Identity Sync — Azure AD Connect
 
@@ -121,11 +200,17 @@ multifactor authentication as the grant control.
 
 ## Skills Demonstrated
 
-- Cloud identity provisioning
-- Role-based access control (RBAC) via security groups
+- Cloud identity provisioning and user lifecycle administration
+- Role-based access control (RBAC) through Entra ID security groups
 - Organizational identity attribute management
+- Conditional Access policy configuration
+- Multifactor authentication (MFA) enforcement
+- Microsoft Entra ID sign-in log analysis
+- Authentication error code analysis and root-cause identification
+- Administrative password reset and account recovery
+- Post-remediation authentication verification
 
-*This list will expand as MFA, sign-in troubleshooting, and hybrid sync are completed.*
+*Hybrid identity synchronization skills will be added after completion of the Azure AD Connect portion of the lab.*
 
 ## Project Status
 
