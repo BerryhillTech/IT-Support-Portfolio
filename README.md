@@ -23,7 +23,7 @@ Each project includes documentation of the environment, implementation process, 
 ## 🧪 Projects
 
 ### 1. Active Directory Help Desk Lab
-**Status:** Completed
+**Status:** Completed ✅
 
 Building a virtualized Windows enterprise environment using Windows Server and Windows 11 to practice common IT support and systems administration tasks.
 
@@ -43,7 +43,7 @@ Building a virtualized Windows enterprise environment using Windows Server and W
 ---
 
 ### 2. Help Desk Troubleshooting Lab
-**Status:** Completed
+**Status:** Completed ✅
 
 Simulated IT support incidents involving user accounts, Windows workstations, applications, permissions, and common end-user issues, documented as six resolved help desk tickets.
 
