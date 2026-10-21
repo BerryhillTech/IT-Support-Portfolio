@@ -2,9 +2,9 @@
 
 ## Overview
 
-This project extends the Berryhill Technologies environment into Microsoft Entra ID, covering cloud identity provisioning, role-based access through security groups, Conditional Access-based MFA enforcement, authentication troubleshooting, and hybrid identity synchronization between the existing on-premises Active Directory domain and Microsoft Entra ID using Microsoft Entra Connect Sync and Password Hash Synchronization.
+In this lab I took my on-prem Active Directory environment into the cloud with Microsoft Entra ID. I created cloud users, set up role-based access with security groups, required MFA for IT staff with Conditional Access, troubleshot a failed sign-in using the Entra sign-in logs, and synced my on-prem users to Entra ID with Entra Connect and Password Hash Synchronization.
 
-The lab builds on the Active Directory and Help Desk environments established in previous portfolio projects and demonstrates both end-user support and identity administration in a hybrid Microsoft environment.
+It builds on the same Berryhill Technologies environment, users and groups from my Active Directory and Help Desk labs.
 
 ---
 
@@ -38,11 +38,11 @@ The lab builds on the Active Directory and Help Desk environments established in
 
 ---
 
-# User Provisioning
+## User Provisioning
 
 Two cloud identities were initially created to represent a standard employee and an IT staff member consistent with the personas used throughout the Active Directory and Help Desk labs.
 
-## Jordan Davis — Standard User
+### Jordan Davis — Standard User
 
 | Attribute | Value |
 |---|---|
@@ -53,7 +53,7 @@ Two cloud identities were initially created to represent a standard employee and
 | Company Name | Berryhill Technologies |
 | Usage Location | United States |
 
-## Alex Johnson — IT Staff
+### Alex Johnson — IT Staff
 
 | Attribute | Value |
 |---|---|
@@ -66,7 +66,7 @@ Two cloud identities were initially created to represent a standard employee and
 
 Both accounts were initially provisioned as cloud identities with temporary passwords and required password changes at first sign-in.
 
-### Evidence
+#### Evidence
 
 ![Jordan Davis cloud user creation](screenshots/01-jordan-davis-user-creation.png)
 
@@ -80,7 +80,7 @@ During the hybrid identity phase of the lab, corresponding on-premises Active Di
 
 ---
 
-# Security Group — Role-Based Access
+## Security Group — Role-Based Access
 
 An `IT-Support` security group was created in Microsoft Entra ID to represent elevated IT access at the cloud identity layer.
 
@@ -93,7 +93,7 @@ This group is separate from the on-premises `IT-Staff` group used for file-share
 
 Jordan Davis was intentionally excluded from this cloud security group to represent a standard employee without elevated IT access.
 
-### Evidence
+#### Evidence
 
 ![IT-Support security group membership](screenshots/03-it-support-group-membership.png)
 
@@ -101,17 +101,16 @@ Jordan Davis was intentionally excluded from this cloud security group to repres
 
 ---
 
-# Multifactor Authentication & Conditional Access
+## Multifactor Authentication & Conditional Access
 
-**Status:** Completed
 
-## Objective
+### Objective
 
 Move beyond baseline Security Defaults by implementing a scoped Conditional Access policy that requires MFA specifically for the `IT-Support` security group.
 
 This demonstrates group-based identity protection rather than applying identical access requirements to every user in the tenant.
 
-## Configuration
+### Configuration
 
 Security Defaults were disabled before implementing Conditional Access.
 
@@ -126,7 +125,7 @@ was configured with the following scope:
 - **Grant Control:** Require multifactor authentication
 - **Policy State:** On
 
-### Evidence
+#### Evidence
 
 ![Conditional Access policy configuration](screenshots/conditional-access-policy-form.png)
 
@@ -138,23 +137,22 @@ was configured with the following scope:
 
 ---
 
-# Sign-In Troubleshooting Scenario
+## Sign-In Troubleshooting Scenario
 
-**Status:** Completed
 
-## Scenario
+### Scenario
 
 Alex Johnson reported being unable to sign in to his Microsoft 365 account.
 
 A failed authentication attempt was intentionally generated to simulate a common Tier 1/2 identity support incident and demonstrate troubleshooting through Microsoft Entra ID.
 
-## Initial User Error
+### Initial User Error
 
 Alex attempted to authenticate to Microsoft 365 but received:
 
 > "Your account or password is incorrect."
 
-### Evidence
+#### Evidence
 
 ![Invalid credential sign-in failure](screenshots/07-sign-in-failure-invalid-credentials.png)
 
@@ -162,7 +160,7 @@ Alex attempted to authenticate to Microsoft 365 but received:
 
 ---
 
-## Investigation — Microsoft Entra Sign-In Logs
+### Investigation — Microsoft Entra Sign-In Logs
 
 Rather than assuming the cause based solely on the user-facing message, the failed authentication attempt was investigated through Microsoft Entra ID sign-in telemetry.
 
@@ -176,7 +174,7 @@ The failed interactive sign-in event revealed:
 
 Error `50126` confirmed that the authentication attempt failed during primary credential validation.
 
-### Evidence
+#### Evidence
 
 ![Entra error 50126 diagnosis](screenshots/08-sign-in-error-50126-diagnosis.png)
 
@@ -184,13 +182,13 @@ Error `50126` confirmed that the authentication attempt failed during primary cr
 
 ---
 
-## Remediation — Administrative Password Reset
+### Remediation — Administrative Password Reset
 
 After identifying the credential failure, an administrative password reset was performed for Alex Johnson through Microsoft Entra ID.
 
 A temporary credential was generated so the user could regain access and establish a new password during the subsequent authentication process.
 
-### Evidence
+#### Evidence
 
 ![Administrative password reset](screenshots/09-password-reset-remediation.png)
 
@@ -198,13 +196,13 @@ A temporary credential was generated so the user could regain access and establi
 
 ---
 
-## MFA Enforcement
+### MFA Enforcement
 
 After the primary credential issue was remediated, Alex proceeded through the authentication process and was presented with Microsoft Authenticator registration as part of the account's MFA requirements.
 
 Alex was a member of the `IT-Support` group targeted by the configured Conditional Access policy.
 
-### Evidence
+#### Evidence
 
 ![Microsoft Authenticator registration](screenshots/10-mfa-registration-prompt.png)
 
@@ -212,7 +210,7 @@ Alex was a member of the `IT-Support` group targeted by the configured Condition
 
 ---
 
-## Authentication Verification
+### Authentication Verification
 
 The subsequent Microsoft Entra sign-in event was reviewed to confirm successful authentication.
 
@@ -223,13 +221,13 @@ The event confirmed:
 - **Status:** Success
 - **Additional Details:** MFA requirement satisfied by claim in the token
 
-### Evidence
+#### Evidence
 
 ![Successful MFA sign-in](screenshots/11-successful-sign-in-mfa-verification.png)
 
 *Successful authentication verified through Microsoft Entra sign-in telemetry with the MFA requirement satisfied.*
 
-## Resolution
+### Resolution
 
 The incident was resolved after:
 
@@ -245,11 +243,10 @@ This scenario demonstrates a complete identity-support troubleshooting workflow 
 
 ---
 
-# Hybrid Identity — Microsoft Entra Connect Sync
+## Hybrid Identity — Microsoft Entra Connect Sync
 
-**Status:** Completed
 
-## Objective
+### Objective
 
 Extend the existing `berryhill.local` Active Directory environment into Microsoft Entra ID by configuring Microsoft Entra Connect Sync.
 
@@ -257,7 +254,7 @@ The hybrid identity portion of the lab demonstrates synchronization of selected 
 
 ---
 
-## On-Premises Identity Preparation
+### On-Premises Identity Preparation
 
 The existing Active Directory environment used the internal domain:
 
@@ -277,7 +274,7 @@ For example:
 
 was configured for the on-premises Alex Johnson identity while the legacy Active Directory logon name remained available.
 
-### Evidence
+#### Evidence
 
 ![Alex Johnson hybrid UPN alignment](screenshots/12-hybrid-upn-alignment-alex.png)
 
@@ -287,7 +284,7 @@ was configured for the on-premises Alex Johnson identity while the legacy Active
 
 ---
 
-# Microsoft Entra Connect Installation
+## Microsoft Entra Connect Installation
 
 Microsoft Entra Connect Sync was installed on `DC01` to establish synchronization between the on-premises Active Directory environment and Microsoft Entra ID.
 
@@ -300,7 +297,7 @@ Custom configuration provided greater control over:
 - Synchronization scope
 - Organizational Unit filtering
 
-### Evidence
+#### Evidence
 
 ![Microsoft Entra Connect custom configuration](screenshots/13-entra-connect-custom-configuration.png)
 
@@ -308,7 +305,7 @@ Custom configuration provided greater control over:
 
 ---
 
-# Active Directory Forest Connection
+## Active Directory Forest Connection
 
 The `berryhill.local` Active Directory forest was connected to Microsoft Entra Connect.
 
@@ -316,7 +313,7 @@ During configuration, Microsoft Entra Connect was allowed to create a dedicated 
 
 This follows the principle of avoiding unnecessary persistent use of highly privileged administrative credentials.
 
-### Evidence
+#### Evidence
 
 ![On-premises AD directory connected](screenshots/14-on-prem-ad-directory-connected.png)
 
@@ -324,7 +321,7 @@ This follows the principle of avoiding unnecessary persistent use of highly priv
 
 ---
 
-# Password Hash Synchronization
+## Password Hash Synchronization
 
 **Password Hash Synchronization (PHS)** was selected as the authentication method.
 
@@ -343,7 +340,7 @@ This kept the hybrid authentication design focused specifically on PHS.
 
 ---
 
-# Organizational Unit Filtering
+## Organizational Unit Filtering
 
 Rather than synchronizing the entire `berryhill.local` Active Directory environment, synchronization was limited to the Organizational Unit containing the pilot identities used in the lab.
 
@@ -357,7 +354,7 @@ Built-in containers and unrelated Active Directory objects were excluded from th
 
 This reduced unnecessary synchronization and demonstrated controlled rollout of hybrid identity services.
 
-### Evidence
+#### Evidence
 
 ![OU filtering for IT pilot](screenshots/15-ou-filtering-it-only.png)
 
@@ -367,11 +364,11 @@ This reduced unnecessary synchronization and demonstrated controlled rollout of 
 
 ---
 
-# Entra Connect Configuration
+## Entra Connect Configuration
 
 After configuring the directory connection, authentication method, identity settings, and OU filtering, Microsoft Entra Connect was prepared to synchronize the selected Active Directory identities with Microsoft Entra ID.
 
-### Evidence
+#### Evidence
 
 ![Microsoft Entra Connect configuration](screenshots/16-entra-connect-configuration-complete-staging.png)
 
@@ -379,13 +376,13 @@ After configuring the directory connection, authentication method, identity sett
 
 ---
 
-# Synchronization Engine Verification
+## Synchronization Engine Verification
 
 Following configuration, the Microsoft Entra Connect synchronization components were reviewed to verify that the on-premises directory objects were being processed through the hybrid identity synchronization pipeline.
 
 The connector and metaverse views provided visibility into the relationship between Active Directory objects and their corresponding Microsoft Entra identities.
 
-### Evidence
+#### Evidence
 
 ![Hybrid metaverse connector verification](screenshots/17-hybrid-metaverse-connectors.png)
 
@@ -393,13 +390,13 @@ The connector and metaverse views provided visibility into the relationship betw
 
 ---
 
-# Successful Entra Export
+## Successful Entra Export
 
 The synchronization process was monitored to confirm that the selected identities were successfully processed and exported to Microsoft Entra ID.
 
 A successful export provided evidence that the synchronization engine completed the outbound synchronization operation without an identified export failure.
 
-### Evidence
+#### Evidence
 
 ![Successful Entra synchronization export](screenshots/18-entra-sync-export-success.png)
 
@@ -407,37 +404,17 @@ A successful export provided evidence that the synchronization engine completed 
 
 ---
 
-# Hybrid Authentication Verification
+## Hybrid Authentication Verification
 
 After synchronization, authentication was tested to validate the completed hybrid identity configuration.
 
 The test demonstrated the relationship between:
 
-**On-Premises Active Directory**
-
-↓
-
-**Microsoft Entra Connect Sync**
-
-↓
-
-**Password Hash Synchronization**
-
-↓
-
-**Microsoft Entra ID**
-
-↓
-
-**Conditional Access / MFA**
-
-↓
-
-**Microsoft 365 Authentication**
+**On-Premises AD → Entra Connect Sync → Password Hash Sync → Microsoft Entra ID → Conditional Access / MFA → Microsoft 365 sign-in**
 
 The synchronized identity successfully completed the expected authentication process, providing end-to-end validation of the hybrid identity deployment.
 
-### Evidence
+#### Evidence
 
 ![Password hash and MFA verification](screenshots/19-password-hash-mfa-verification.png)
 
@@ -445,7 +422,7 @@ The synchronized identity successfully completed the expected authentication pro
 
 ---
 
-# Hybrid Identity Result
+## Hybrid Identity Result
 
 The completed configuration established a functional hybrid identity environment between the existing Berryhill Technologies Active Directory lab and Microsoft Entra ID.
 
@@ -467,7 +444,7 @@ Rather than synchronizing the entire Active Directory environment, the deploymen
 
 ---
 
-# Lab Design Considerations
+## Lab Design Considerations
 
 This project was designed as a home-lab simulation rather than a production Microsoft identity deployment.
 
@@ -487,7 +464,7 @@ These distinctions were considered while implementing the simplified home-lab ar
 
 ---
 
-# Skills Demonstrated
+## Skills Demonstrated
 
 - Microsoft Entra ID administration
 - Microsoft 365 identity management
@@ -521,7 +498,7 @@ These distinctions were considered while implementing the simplified home-lab ar
 
 ---
 
-# Project Outcome
+## Project Outcome
 
 This lab progressed from basic Microsoft Entra ID administration into a complete identity-support and hybrid synchronization exercise.
 

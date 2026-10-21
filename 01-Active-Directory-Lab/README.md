@@ -2,9 +2,9 @@
 
 ## Project Overview
 
-This project demonstrates the deployment and administration of a small Windows domain environment designed to simulate common IT Help Desk and Systems Administration responsibilities.
+I built a small Windows domain in VMware for a made-up company, Berryhill Technologies, to practice the work a help desk and junior sysadmin does every day.
 
-The lab was built using virtual machines and includes a Windows Server domain controller and a Windows 11 client workstation. The environment was used to practice Active Directory administration, DNS configuration, domain authentication, user and group management, password administration, SMB file sharing, NTFS permissions, and troubleshooting.
+The lab has a Windows Server domain controller (DC01) and a domain-joined Windows 11 workstation (CLIENT01). I used it to practice Active Directory, DNS, user and group management, password resets, file shares, NTFS permissions and troubleshooting access problems.
 
 ---
 

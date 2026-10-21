@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project simulates real-world Help Desk support incidents in a Windows domain environment. Each ticket documents the reported issue, troubleshooting process, root cause, resolution, and verification steps.
+Six help desk tickets I worked through in my Active Directory lab: sign-in failures, a locked account, file share permissions, a missing mapped drive, an access request and a user profile issue. Each ticket shows what was reported, how I troubleshot it, the root cause, the fix and how I verified it.
 
 ## Lab Environment
 
@@ -23,7 +23,7 @@ This project simulates real-world Help Desk support incidents in a Windows domai
 
 ## Ticket Documentation Format
 
-Each simulated support ticket will include:
+Each support ticket includes:
 
 - **Ticket ID**
 - **User / Workstation**
@@ -41,7 +41,7 @@ Each simulated support ticket will include:
 |---|---|---|---|
 | HD-001 | Domain user unable to sign in | Account / Authentication | Resolved |
 | HD-002 | Domain account locked after failed sign-in attempts | Account / Authentication | Resolved |
-| HD-003 | User cannot access shared folder | Access / Permissions | Resolved |
+| HD-003 | Shared folder permissions not working as intended | Access / Permissions | Resolved |
 | HD-004 | Mapped network drive unavailable | File Services | Resolved |
 | HD-005 | User requires departmental resource access | Service Request | Resolved |
 | HD-006 | Windows application or user profile issue | Application / Windows | Resolved |
@@ -152,7 +152,7 @@ This confirmed that domain authentication was successfully restored.
 
 ![HD-002 Unlock Verification](screenshots/hd-002-unlock-verification.png)
 
-## HD-003 — User Cannot Access Shared Folder
+### HD-003 — Shared Folder Permissions Not Working as Intended
 
 **User:** Jordan Davis (`jdavis`)  
 **Workstation:** Client01  
@@ -160,11 +160,11 @@ This confirmed that domain authentication was successfully restored.
 **Priority:** P3 — Normal  
 **Status:** Resolved  
 
-### Issue Reported
+#### Issue Reported
 
 The user was able to access the shared folder on `\\DC01\IT-Share`, but permissions were not behaving as intended. The user should have read-only access while members of the IT-Staff group should have modify access.
 
-### Troubleshooting Steps
+#### Troubleshooting Steps
 
 1. Verified the user's current group memberships with `whoami /groups`.
 2. Reviewed NTFS permissions on `C:\IT-Share`.
@@ -174,25 +174,25 @@ The user was able to access the shared folder on `\\DC01\IT-Share`, but permissi
 6. Used Advanced Security Settings and Effective Access to verify the user's resulting permissions.
 7. Tested access from Client01 using the Jordan Davis account.
 
-### Root Cause
+#### Root Cause
 
 The shared folder had inconsistent SMB and NTFS permission assignments that did not match the intended role-based access model. Standard domain users required read-only access, while members of the `IT-Staff` security group required modify access.
 
-### Resolution
+#### Resolution
 
 Configured group-based permissions so that `Domain Users` receive read-only access while `IT-Staff` receives modify access. Verified that Jordan Davis could open files in the share but could not save changes.
 
-### Verification
+#### Verification
 
 Jordan's Effective Access showed read permissions without write, delete, or full-control permissions. A client-side test confirmed that Windows denied write access when the user attempted to save changes.
 
-### Evidence
+#### Evidence
 
 ![HD-003 Effective Access](screenshots/hd-003-effective-access.png)
 
 ![HD-003 Read-Only Access Denied](screenshots/hd-003-read-only-access-denied.png)
 
-## HD-004 — Mapped Network Drive Unavailable
+### HD-004 — Mapped Network Drive Unavailable
 
 **User:** Jordan Davis (`jdavis`)  
 **Workstation:** CLIENT01  
@@ -200,7 +200,7 @@ Jordan's Effective Access showed read permissions without write, delete, or full
 **Priority:** P3 — Normal  
 **Status:** Resolved
 
-### Issue
+#### Issue
 
 The user reported that the mapped network drive used to access the departmental file share was no longer available in File Explorer.
 
@@ -208,7 +208,7 @@ The expected mapping was:
 
 `Z:` → `\\DC01\IT-Share`
 
-### Troubleshooting Steps
+#### Troubleshooting Steps
 
 1. Opened File Explorer and confirmed that the `Z:` mapped network drive was not present under This PC.
 2. Ran `net use` and confirmed that no network drive mappings were registered for the user.
@@ -222,21 +222,21 @@ The expected mapping was:
 7. Ran `net use` again and confirmed that `Z:` was mapped to `\\DC01\IT-Share` with a status of `OK`.
 8. Signed out and signed back in to verify that the persistent mapping was retained.
 
-### Root Cause
+#### Root Cause
 
 The user's `Z:` drive mapping to `\\DC01\IT-Share` was absent. The underlying network connection and SMB share remained available, confirming that the issue was isolated to the client-side drive mapping rather than a file server or share outage.
 
-### Resolution
+#### Resolution
 
 Recreated the `Z:` network drive mapping to `\\DC01\IT-Share` using the `net use` command with the `/persistent:yes` option.
 
-### Verification
+#### Verification
 
 After recreating the mapping, `net use` displayed the `Z:` drive with a status of `OK`.
 
 The user was able to access the shared folder through the mapped drive. After signing out and signing back in, the `Z:` drive remained available, confirming that the persistent mapping was successfully restored.
 
-### Evidence
+#### Evidence
 
 ![Missing Mapped Drive](screenshots/hd-004-missing-mapped-drive.png)
 
@@ -246,7 +246,7 @@ The user was able to access the shared folder through the mapped drive. After si
 
 ![Persistent Drive Verification](screenshots/hd-004-persistent-drive-verification.png)
 
-## HD-005 — User Requires Departmental Resource Access
+### HD-005 — User Requires Departmental Resource Access
 
 **User:** Alex Johnson (`ajohnson`)  
 **Workstation:** CLIENT01  
@@ -254,7 +254,7 @@ The user was able to access the shared folder through the mapped drive. After si
 **Priority:** P3 — Normal  
 **Status:** Resolved
 
-### Request
+#### Request
 
 The user required modify access to the departmental file share:
 
@@ -264,7 +264,7 @@ The existing permission model granted standard `Domain Users` read-only access, 
 
 The request was to provide Alex Johnson with the additional access required for his IT role without assigning permissions directly to his individual user account.
 
-### Initial Access Verification
+#### Initial Access Verification
 
 Before processing the request, Alex Johnson was authenticated as a standard domain user without `IT-Staff` membership in his current security token.
 
@@ -272,7 +272,7 @@ The user could access and read files within `\\DC01\IT-Share` but could not succ
 
 This confirmed that the existing read-only permissions for standard domain users were functioning as intended.
 
-### Resolution Steps
+#### Resolution Steps
 
 1. Reviewed the existing access model for `\\DC01\IT-Share`.
 2. Confirmed that modify access was already assigned to the `IT-Staff` Active Directory security group.
@@ -286,13 +286,13 @@ This confirmed that the existing read-only permissions for standard domain users
 7. Confirmed that `BERRYHILL\IT-Staff` appeared as an enabled security group in the user's current token.
 8. Accessed the departmental share and successfully modified a test file.
 
-### Access Provisioning Method
+#### Access Provisioning Method
 
 Access was granted through membership in the existing `IT-Staff` security group rather than by assigning NTFS or SMB permissions directly to Alex Johnson.
 
 This preserves the group-based access model and allows permissions to be administered according to job role.
 
-### Authentication Token Validation
+#### Authentication Token Validation
 
 Although Alex's `IT-Staff` membership was present in Active Directory, the group did not initially appear in the user's existing Windows security token.
 
@@ -302,13 +302,13 @@ A full logoff was performed using:
 
 After Alex authenticated again, `whoami /groups` confirmed that `BERRYHILL\IT-Staff` was enabled in the new logon token.
 
-### Resolution
+#### Resolution
 
 Added Alex Johnson to the `IT-Staff` Active Directory security group and refreshed the user's Windows logon session.
 
 The new security token included `IT-Staff` membership, allowing the permissions already assigned to the group to provide Alex with modify access to the departmental resource.
 
-### Verification
+#### Verification
 
 The following were successfully verified:
 
@@ -318,7 +318,7 @@ The following were successfully verified:
 - Alex successfully modified and saved content within the shared resource.
 - Access was provided through security group membership rather than direct user permissions.
 
-### Evidence
+#### Evidence
 
 ![Access Denied Before Group Membership](screenshots/hd-005-before-access-denied.png)
 
@@ -328,7 +328,7 @@ The following were successfully verified:
 
 ![Modify Access Verified](screenshots/hd-005-modify-access-verified.png)
 
-## HD-006 — Windows Application / User Profile Issue
+### HD-006 — Windows Application / User Profile Issue
 
 **User:** Jordan Davis (`jdavis`)  
 **Workstation:** CLIENT01  
@@ -336,13 +336,13 @@ The following were successfully verified:
 **Priority:** P3 — Normal  
 **Status:** Resolved
 
-### Issue
+#### Issue
 
 The user reported that Notepad was retaining an unwanted application configuration within their Windows profile.
 
 The objective was to determine whether the behavior was caused by the Notepad installation on CLIENT01 or by user-specific application settings.
 
-### Troubleshooting Steps
+#### Troubleshooting Steps
 
 1. Signed into CLIENT01 as Jordan Davis and reproduced the Notepad configuration issue.
 2. Confirmed that the configuration persisted when Notepad was closed and reopened.
@@ -354,19 +354,19 @@ The objective was to determine whether the behavior was caused by the Notepad in
 8. Navigated to the advanced options for Notepad and reset the application.
 9. Relaunched Notepad and verified that the user-specific configuration had returned to its expected default state.
 
-### Root Cause
+#### Root Cause
 
 The issue was isolated to user-specific Notepad application data within Jordan Davis's Windows profile.
 
 Because Notepad behaved normally when launched by another domain user on the same workstation, the underlying application installation and workstation were determined to be functioning correctly.
 
-### Resolution
+#### Resolution
 
 Reset Notepad through Windows application settings for the affected user.
 
 This cleared the user-specific application configuration without requiring a system-wide application reinstall or changes to another user's profile.
 
-### Verification
+#### Verification
 
 After the reset, Notepad launched successfully under Jordan Davis's account with the expected default configuration.
 
@@ -374,7 +374,7 @@ A post-resolution test confirmed that the application was functioning normally.
 
 Testing with Alex Johnson also demonstrated that the original behavior was isolated to Jordan's user-specific application configuration rather than CLIENT01 as a whole.
 
-### Evidence
+#### Evidence
 
 ![Jordan User-Specific Configuration](screenshots/hd-006-jordan-user-specific-config.png)
 
@@ -386,7 +386,7 @@ Testing with Alex Johnson also demonstrated that the original behavior was isola
 
 ## Troubleshooting Methodology
 
-For each support incident, I will follow a structured troubleshooting process:
+For each ticket, I follow the same troubleshooting process:
 
 1. Identify and document the user's reported problem
 2. Gather information and establish the scope of the issue
